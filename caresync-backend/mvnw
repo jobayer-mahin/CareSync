@@ -1,0 +1,58 @@
+#!/bin/sh
+# ----------------------------------------------------------------------------
+# CareSync Maven Wrapper (Linux / macOS / Git-Bash)
+# Downloads the Maven version named in .mvn/wrapper/maven-wrapper.properties
+# the first time it runs, then forwards all arguments to it.
+#   ./mvnw clean test
+# ----------------------------------------------------------------------------
+set -eu
+
+BASE_DIR=$(cd "$(dirname "$0")" && pwd -P)
+PROPS="$BASE_DIR/.mvn/wrapper/maven-wrapper.properties"
+
+if [ ! -f "$PROPS" ]; then
+  echo "mvnw: missing $PROPS" >&2
+  exit 1
+fi
+
+URL=$(sed -n 's/^distributionUrl=//p' "$PROPS" | tr -d '\r' | head -n 1)
+if [ -z "$URL" ]; then
+  echo "mvnw: distributionUrl not set in $PROPS" >&2
+  exit 1
+fi
+
+FILE_NAME=${URL##*/}
+case "$FILE_NAME" in
+  *.zip)    DIST_NAME=${FILE_NAME%.zip} ;;
+  *.tar.gz) DIST_NAME=${FILE_NAME%.tar.gz} ;;
+  *) echo "mvnw: unsupported distribution type: $FILE_NAME" >&2; exit 1 ;;
+esac
+
+HASH=$(printf '%s' "$URL" | cksum | cut -d ' ' -f 1)
+MAVEN_HOME_DIR="${MAVEN_USER_HOME:-$HOME/.m2}/wrapper/dists/$DIST_NAME/$HASH"
+
+if [ ! -x "$MAVEN_HOME_DIR/bin/mvn" ]; then
+  echo "mvnw: downloading $URL" >&2
+  TMP_DIR=$(mktemp -d)
+  trap 'rm -rf "$TMP_DIR"' EXIT
+  if command -v curl >/dev/null 2>&1; then
+    curl -fsSL "$URL" -o "$TMP_DIR/$FILE_NAME"
+  elif command -v wget >/dev/null 2>&1; then
+    wget -q "$URL" -O "$TMP_DIR/$FILE_NAME"
+  else
+    echo "mvnw: need curl or wget to download Maven" >&2
+    exit 1
+  fi
+  mkdir -p "$TMP_DIR/unpacked"
+  case "$FILE_NAME" in
+    *.zip)    unzip -q "$TMP_DIR/$FILE_NAME" -d "$TMP_DIR/unpacked" ;;
+    *.tar.gz) tar -xzf "$TMP_DIR/$FILE_NAME" -C "$TMP_DIR/unpacked" ;;
+  esac
+  INNER=$(find "$TMP_DIR/unpacked" -mindepth 1 -maxdepth 1 -type d | head -n 1)
+  mkdir -p "$MAVEN_HOME_DIR"
+  cp -R "$INNER"/. "$MAVEN_HOME_DIR"/
+  chmod +x "$MAVEN_HOME_DIR/bin/mvn"
+fi
+
+export MAVEN_PROJECTBASEDIR="$BASE_DIR"
+exec "$MAVEN_HOME_DIR/bin/mvn" "$@"
