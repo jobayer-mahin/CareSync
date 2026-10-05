@@ -1,0 +1,31 @@
+# ---------- Dependencies / build output ----------
+node_modules/
+dist/
+target/
+build/
+coverage/
+ 
+# ---------- Logs ----------
+*.log
+npm-debug.log*
+ 
+# ---------- Secrets / local config ----------
+.env
+.env.*
+*.local
+application-local.properties
+ 
+# ---------- IDE / OS files ----------
+.idea/
+.vscode/
+*.iml
+*.classpath
+*.project
+.settings/
+.DS_Store
+Thumbs.db
+ 
+# ---------- Tooling leftovers (not part of the project) ----------
+.github/modernize/
+HELP.md
+ 
