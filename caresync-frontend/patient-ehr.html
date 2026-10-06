@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <style>#root { display: contents; }</style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CareSync HMS — Electronic Health Records</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/legacy/css/dashboard-style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+    <style>
+
+      .material-symbols-outlined {
+        vertical-align: middle;
+        line-height: 1;
+      }
+      .nav-icon {
+        font-size: 18px !important;
+        width: 20px;
+        text-align: center;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .ehr-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+      .ehr-title-area h2 {
+        font-family: "Sora", sans-serif;
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--navy);
+        margin-bottom: 4px;
+      }
+      .ehr-title-area p {
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .search-filter-bar {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+      }
+      .ehr-search {
+        display: flex;
+        align-items: center;
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 10px 14px;
+        gap: 8px;
+        flex: 1;
+        max-width: 320px;
+      }
+      .ehr-search input {
+        border: none;
+        background: transparent;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        color: var(--navy);
+        outline: none;
+        width: 100%;
+      }
+      .cat-select {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        color: var(--slate);
+        outline: none;
+        cursor: pointer;
+      }
+
+      .upload-zone {
+        background: var(--white);
+        border: 2px dashed var(--border);
+        border-radius: 16px;
+        padding: 40px;
+        text-align: center;
+        margin-bottom: 28px;
+        transition: all 0.25s;
+        cursor: pointer;
+        position: relative;
+      }
+      .upload-zone:hover,
+      .upload-zone.drag-over {
+        border-color: var(--teal);
+        background: rgba(10, 124, 124, 0.02);
+      }
+      .upload-zone-icon {
+        font-size: 42px;
+        margin-bottom: 12px;
+        opacity: 0.6;
+      }
+      .upload-zone-text {
+        font-family: "Sora", sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--navy);
+        margin-bottom: 6px;
+      }
+      .upload-zone-sub {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .upload-zone input[type="file"] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+      }
+      .upload-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 14px;
+        padding: 10px 22px;
+        border-radius: 10px;
+        background: var(--teal);
+        color: white;
+        border: none;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        pointer-events: none;
+      }
+
+      .doc-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 16px;
+      }
+      .doc-card {
+        background: var(--white);
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        transition: all 0.2s;
+        animation: slideUpFade 0.4s ease forwards;
+      }
+      .doc-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+      }
+      .doc-card-top {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .doc-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        flex-shrink: 0;
+      }
+      .doc-icon.pdf {
+        background: rgba(224, 82, 82, 0.1);
+      }
+      .doc-icon.image {
+        background: rgba(124, 92, 191, 0.1);
+      }
+      .doc-icon.other {
+        background: rgba(10, 124, 124, 0.1);
+      }
+      .doc-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--navy);
+        word-break: break-word;
+      }
+      .doc-meta {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .doc-tag {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 12px;
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+      .doc-tag.lab {
+        background: rgba(26, 171, 109, 0.1);
+        color: var(--success);
+      }
+      .doc-tag.imaging {
+        background: rgba(124, 92, 191, 0.1);
+        color: var(--purple);
+      }
+      .doc-tag.prescription {
+        background: rgba(245, 166, 35, 0.1);
+        color: var(--warning);
+      }
+      .doc-tag.general {
+        background: rgba(10, 124, 124, 0.1);
+        color: var(--teal);
+      }
+      .doc-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: auto;
+      }
+      .doc-btn {
+        flex: 1;
+        padding: 8px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: none;
+        font-family: "DM Sans", sans-serif;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.15s;
+        text-align: center;
+        text-decoration: none;
+        color: var(--slate);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+      }
+      .doc-btn:hover {
+        background: var(--bg);
+        border-color: var(--teal);
+        color: var(--teal);
+      }
+      .doc-btn.danger:hover {
+        border-color: var(--danger);
+        color: var(--danger);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: var(--white);
+        border-radius: 16px;
+        border: 1px solid var(--border);
+      }
+      .empty-state-icon {
+        font-size: 56px;
+        margin-bottom: 16px;
+        opacity: 0.4;
+      }
+      .empty-state-title {
+        font-family: "Sora", sans-serif;
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--navy);
+        margin-bottom: 8px;
+      }
+      .empty-state-desc {
+        font-size: 14px;
+        color: var(--muted);
+        max-width: 400px;
+        margin: 0 auto;
+      }
+
+      .stats-bar {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+      .stats-item {
+        background: var(--white);
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        padding: 16px;
+        text-align: center;
+      }
+      .stats-num {
+        font-family: "Sora", sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--navy);
+      }
+      .stats-label {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+    
+</style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/pages/patient-ehr/main.jsx"></script>
+  </body>
+</html>
