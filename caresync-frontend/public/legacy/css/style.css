@@ -1,0 +1,248 @@
+:root {
+  --teal: #0a7c7c;
+  --teal-light: #13a8a8;
+  --teal-dark: #065a5a;
+  --navy: #0d1b2a;
+  --slate: #1e3448;
+  --ice: #e8f4f4;
+  --white: #ffffff;
+  --muted: #6b8fa3;
+  --border: #c8dde6;
+  --danger: #e05252;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "DM Sans", sans-serif;
+  background: var(--navy);
+  min-height: 100vh;
+  display: flex;
+  overflow: hidden;
+}
+
+/* বাম পাশের প্যানেল */
+.left-panel {
+  width: 52%;
+  background: linear-gradient(
+    145deg,
+    var(--teal-dark) 0%,
+    var(--teal) 50%,
+    var(--teal-light) 100%
+  );
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px;
+  overflow: hidden;
+}
+
+.left-panel::before {
+  content: "";
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  top: -150px;
+  right: -150px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 60px;
+  position: relative;
+  z-index: 1;
+}
+
+.brand-icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  backdrop-filter: blur(10px);
+}
+
+.brand-name {
+  font-family: "Sora", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.hero-text h1 {
+  font-family: "Sora", sans-serif;
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.2;
+}
+
+.stats-row {
+  display: flex;
+  gap: 32px;
+  margin-top: 52px;
+  position: relative;
+  z-index: 1;
+}
+
+.stat-num {
+  font-family: "Sora", sans-serif;
+  font-size: 28px;
+  color: var(--white);
+}
+
+.stat-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ডান পাশের প্যানেল */
+.right-panel {
+  flex: 1;
+  background: #f5f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.login-box {
+  width: 100%;
+  max-width: 420px;
+  animation: fadeUp 0.5s ease both;
+}
+
+.role-tabs {
+  display: flex;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 28px;
+  gap: 4px;
+}
+
+.role-tab {
+  flex: 1;
+  padding: 9px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 7px;
+}
+
+.role-tab.active {
+  background: var(--teal);
+  color: var(--white);
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 7px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 40px;
+  border: 1.5px solid var(--border);
+  border-radius: 9px;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.remember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--slate);
+  cursor: pointer;
+}
+
+.remember input {
+  cursor: pointer;
+  accent-color: var(--teal);
+}
+
+.forgot {
+  font-size: 13px;
+  color: var(--teal);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s;
+}
+
+.forgot:hover {
+  color: var(--teal-light);
+  text-decoration: underline;
+}
+
+.btn-login {
+  width: 100%;
+  padding: 14px;
+  background: var(--teal);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.demo-creds {
+  background: var(--ice);
+  padding: 14px;
+  border-radius: 9px;
+  margin-top: 10px;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.cred-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 10px;
+  margin-top: 6px;
+  border-radius: 6px;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+
+.cred-row:hover {
+  background: rgba(10, 124, 124, 0.08);
+  color: var(--teal);
+}
+
