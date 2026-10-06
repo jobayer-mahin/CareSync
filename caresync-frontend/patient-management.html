@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <style>#root { display: contents; }</style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CareSync HMS — Patient Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+    <style>
+
+      .material-symbols-outlined {
+        vertical-align: middle;
+        line-height: 1;
+      }
+      :root {
+        --teal: #0a7c7c;
+        --teal-light: #13a8a8;
+        --teal-dark: #065a5a;
+        --navy: #0d1b2a;
+        --slate: #1e3448;
+        --ice: #e8f4f4;
+        --white: #ffffff;
+        --muted: #6b8fa3;
+        --border: #dde8ed;
+        --bg: #f2f7f9;
+        --success: #1aab6d;
+        --warning: #f5a623;
+        --danger: #e05252;
+        --purple: #7c5cbf;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--bg);
+        color: var(--navy);
+        display: flex;
+        min-height: 100vh;
+      }
+
+      /* SIDEBAR (shared) */
+      .sidebar {
+        width: 240px;
+        background: var(--navy);
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 100;
+      }
+      .sidebar-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 22px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      }
+      .brand-icon {
+        width: 36px;
+        height: 36px;
+        background: var(--teal);
+        border-radius: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+      }
+      .brand-text {
+        font-family: "Sora", sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--white);
+      }
+      .brand-sub {
+        font-size: 10px;
+        color: rgba(255, 255, 255, 0.4);
+      }
+      .sidebar-section {
+        padding: 22px 14px 8px;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.3);
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 11px 16px;
+        margin: 1px 10px;
+        border-radius: 8px;
+        font-size: 13.5px;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.55);
+        cursor: pointer;
+        transition: all 0.18s;
+        text-decoration: none;
+      }
+      .nav-item:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.85);
+      }
+      .nav-item.active {
+        background: var(--teal);
+        color: var(--white);
+        font-weight: 500;
+      }
+      .nav-icon {
+        font-size: 18px !important;
+        width: 20px;
+        text-align: center;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .nav-badge {
+        margin-left: auto;
+        background: var(--danger);
+        color: white;
+        font-size: 10px;
+        font-weight: 600;
+        padding: 2px 7px;
+        border-radius: 20px;
+      }
+      .sidebar-bottom {
+        margin-top: auto;
+        padding: 14px 10px;
+        border-top: 1px solid rgba(255, 255, 255, 0.07);
+      }
+      .user-card {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        border-radius: 9px;
+        background: rgba(255, 255, 255, 0.05);
+        cursor: pointer;
+      }
+      .avatar {
+        width: 36px;
+        height: 36px;
+        background: var(--teal-light);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 600;
+        color: white;
+      }
+      .user-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--white);
+      }
+      .user-role {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.4);
+      }
+
+      /* MAIN */
+      .main {
+        margin-left: 240px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .topbar {
+        background: var(--white);
+        border-bottom: 1px solid var(--border);
+        padding: 0 28px;
+        height: 62px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+      }
+      .page-title {
+        font-family: "Sora", sans-serif;
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--navy);
+        letter-spacing: -0.3px;
+      }
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .btn-primary {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--teal);
+        color: white;
+        border: none;
+        border-radius: 9px;
+        padding: 9px 18px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.18s;
+      }
+      .btn-primary:hover {
+        background: var(--teal-dark);
+      }
+      .btn-outline {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: transparent;
+        color: var(--slate);
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        padding: 9px 16px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        cursor: pointer;
+      }
+
+      .content {
+        padding: 28px;
+      }
+
+      /* FILTERS */
+      .filters-row {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 20px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .search-bar {
+        display: flex;
+        align-items: center;
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        padding: 10px 14px;
+        gap: 8px;
+        flex: 1;
+        max-width: 320px;
+      }
+      .search-bar input {
+        border: none;
+        background: transparent;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        color: var(--navy);
+        outline: none;
+        width: 100%;
+      }
+      .filter-select {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        padding: 10px 14px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        color: var(--slate);
+        outline: none;
+        cursor: pointer;
+      }
+
+      /* STAT ROW */
+      .mini-stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-bottom: 22px;
+      }
+      .mini-card {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 11px;
+        padding: 16px 18px;
+      }
+      .mini-num {
+        font-family: "Sora", sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--navy);
+      }
+      .mini-label {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 3px;
+      }
+      .mini-icon {
+        font-size: 22px;
+        margin-bottom: 8px;
+      }
+
+      /* TABLE */
+      .table-card {
+        background: var(--white);
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        overflow: hidden;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      thead th {
+        background: var(--bg);
+        padding: 13px 16px;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+      }
+      tbody tr {
+        border-bottom: 1px solid var(--border);
+        transition: background 0.15s;
+        cursor: pointer;
+      }
+      tbody tr:last-child {
+        border-bottom: none;
+      }
+      tbody tr:hover {
+        background: var(--ice);
+      }
+      td {
+        padding: 14px 16px;
+        font-size: 13.5px;
+        color: var(--slate);
+      }
+      .patient-cell {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .pt-avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 700;
+        color: white;
+        flex-shrink: 0;
+      }
+      .pt-name {
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--navy);
+      }
+      .pt-id {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 11.5px;
+        font-weight: 600;
+      }
+      .status-badge.active {
+        background: rgba(26, 171, 109, 0.1);
+        color: var(--success);
+      }
+      .status-badge.admitted {
+        background: rgba(10, 124, 124, 0.1);
+        color: var(--teal);
+      }
+      .status-badge.discharged {
+        background: rgba(107, 143, 163, 0.1);
+        color: var(--muted);
+      }
+      .status-badge.critical {
+        background: rgba(224, 82, 82, 0.1);
+        color: var(--danger);
+      }
+      .action-btns {
+        display: flex;
+        gap: 6px;
+      }
+      .act-btn {
+        width: 30px;
+        height: 30px;
+        border-radius: 7px;
+        border: 1px solid var(--border);
+        background: transparent;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        transition: background 0.15s;
+      }
+      .act-btn:hover {
+        background: var(--bg);
+      }
+
+      /* PAGINATION */
+      .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 20px;
+        border-top: 1px solid var(--border);
+      }
+      .pag-info {
+        font-size: 12.5px;
+        color: var(--muted);
+      }
+      .pag-btns {
+        display: flex;
+        gap: 4px;
+      }
+      .pag-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 7px;
+        border: 1px solid var(--border);
+        background: transparent;
+        cursor: pointer;
+        font-size: 13px;
+        color: var(--slate);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .pag-btn.active {
+        background: var(--teal);
+        color: white;
+        border-color: var(--teal);
+      }
+
+      /* MODAL */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(13, 27, 42, 0.5);
+        z-index: 200;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(3px);
+      }
+      .modal-overlay.show {
+        display: flex;
+      }
+      .modal {
+        background: var(--white);
+        border-radius: 16px;
+        width: 520px;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+      .modal-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 22px 24px;
+        border-bottom: 1px solid var(--border);
+      }
+      .modal-title {
+        font-family: "Sora", sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--navy);
+      }
+      .modal-close {
+        background: var(--bg);
+        border: none;
+        border-radius: 7px;
+        width: 32px;
+        height: 32px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      .modal-body {
+        padding: 24px;
+      }
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .form-group.full {
+        grid-column: 1/-1;
+      }
+      .form-group label {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+      }
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        padding: 10px 13px;
+        border: 1.5px solid var(--border);
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13.5px;
+        color: var(--navy);
+        outline: none;
+        transition: border-color 0.18s;
+        background: var(--white);
+      }
+      .form-group input:focus,
+      .form-group select:focus {
+        border-color: var(--teal);
+      }
+      .modal-foot {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        padding: 18px 24px;
+        border-top: 1px solid var(--border);
+      }
+      .btn-cancel {
+        padding: 10px 20px;
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        background: transparent;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        cursor: pointer;
+        color: var(--slate);
+      }
+      /* Skeleton Loading Styles */
+      .skeleton {
+        background: #e2e8f0;
+        background-image: linear-gradient(
+          90deg,
+          #e2e8f0 0px,
+          #cbd5e1 40px,
+          #e2e8f0 80px
+        );
+        background-size: 200% 100%;
+        animation: skeleton-pulse 1.5s infinite linear;
+        border-radius: 4px;
+        color: transparent !important;
+      }
+      .skeleton * {
+        visibility: hidden;
+      }
+      @keyframes skeleton-pulse {
+        0% {
+          background-position: -100% 0;
+        }
+        100% {
+          background-position: 100% 0;
+        }
+      }
+      [data-theme="dark"] {
+        --teal: #13a8a8;
+        --teal-light: #0a7c7c;
+        --teal-dark: #19c0c0;
+        --navy: #e8f4f4;
+        --slate: #dde8ed;
+        --ice: #1e3448;
+        --white: #111b27;
+        --muted: #8aaabb;
+        --border: #1e3448;
+        --bg: #090e14;
+      }
+    
+</style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/pages/patient-management/main.jsx"></script>
+  </body>
+</html>
