@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <style>#root { display: contents; }</style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CareSync HMS — My Appointments</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/legacy/css/dashboard-style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+    <style>
+
+      .material-symbols-outlined {
+        vertical-align: middle;
+        line-height: 1;
+      }
+      .nav-icon {
+        font-size: 18px !important;
+        width: 20px;
+        text-align: center;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .tabs {
+        display: flex;
+        gap: 0;
+        margin-bottom: 24px;
+        border-bottom: 2px solid var(--border);
+      }
+      .tab-btn {
+        padding: 12px 24px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--muted);
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -2px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .tab-btn:hover {
+        color: var(--navy);
+      }
+      .tab-btn.active {
+        color: var(--teal);
+        border-bottom-color: var(--teal);
+      }
+      .tab-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 20px;
+        height: 20px;
+        padding: 0 6px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: 700;
+        margin-left: 6px;
+      }
+      .tab-btn.active .tab-count {
+        background: var(--teal);
+        color: white;
+      }
+      .tab-btn:not(.active) .tab-count {
+        background: var(--border);
+        color: var(--muted);
+      }
+
+      .appt-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .appt-card {
+        background: var(--white);
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        padding: 20px 24px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        transition: all 0.2s;
+        animation: slideUpFade 0.4s ease forwards;
+      }
+      .appt-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+      }
+      .appt-card-date {
+        min-width: 64px;
+        text-align: center;
+        padding: 10px;
+        border-radius: 12px;
+        background: var(--bg);
+      }
+      .appt-card-day {
+        font-family: "Sora", sans-serif;
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--navy);
+        line-height: 1;
+      }
+      .appt-card-month {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        margin-top: 2px;
+      }
+      .appt-card-info {
+        flex: 1;
+      }
+      .appt-card-doctor {
+        font-family: "Sora", sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--navy);
+        margin-bottom: 4px;
+      }
+      .appt-card-meta {
+        font-size: 13px;
+        color: var(--muted);
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .appt-card-meta span {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .appt-card-status {
+        text-align: right;
+      }
+      .badge {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .badge.confirmed {
+        background: rgba(26, 171, 109, 0.1);
+        color: var(--success);
+      }
+      .badge.pending {
+        background: rgba(245, 166, 35, 0.1);
+        color: var(--warning);
+      }
+      .badge.cancelled {
+        background: rgba(224, 82, 82, 0.1);
+        color: var(--danger);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--muted);
+      }
+      .empty-state-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+      }
+      .empty-state-title {
+        font-family: "Sora", sans-serif;
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--navy);
+        margin-bottom: 8px;
+      }
+      .empty-state-desc {
+        font-size: 14px;
+      }
+
+      .summary-bar {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+      .summary-card {
+        background: var(--white);
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        padding: 18px 20px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .summary-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+      }
+      .summary-num {
+        font-family: "Sora", sans-serif;
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--navy);
+      }
+      .summary-label {
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .loading-skeleton {
+        background: linear-gradient(
+          90deg,
+          var(--border) 25%,
+          var(--bg) 50%,
+          var(--border) 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        border-radius: 8px;
+        height: 80px;
+        margin-bottom: 12px;
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+
+      /* Booking Modal Styles */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(13, 27, 42, 0.4);
+        z-index: 200;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(8px);
+        padding: 20px;
+        animation: fadeIn 0.25s ease-out;
+      }
+      .modal-overlay.show {
+        display: flex;
+      }
+      .modal {
+        background: var(--white);
+        border-radius: 20px;
+        width: 100%;
+        max-width: 500px;
+        max-height: 90vh;
+        overflow-y: auto;
+        border: 1px solid var(--border);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        animation: slideUp 0.3s ease-out;
+      }
+      [data-theme="dark"] .modal {
+        background: #111b27;
+        border-color: rgba(255, 255, 255, 0.08);
+      }
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 24px;
+        border-bottom: 1px solid var(--border);
+      }
+      .modal-title {
+        font-family: "Sora", sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--navy);
+      }
+      .modal-close {
+        background: var(--bg);
+        border: none;
+        border-radius: 7px;
+        width: 32px;
+        height: 32px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--slate);
+      }
+      .modal-body {
+        padding: 24px;
+      }
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 16px;
+      }
+      .form-group label {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+      }
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        padding: 10px 13px;
+        border: 1.5px solid var(--border);
+        border-radius: 9px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13.5px;
+        color: var(--navy);
+        outline: none;
+        background: var(--white);
+        transition: border-color 0.18s;
+      }
+      [data-theme="dark"] .form-group input,
+      [data-theme="dark"] .form-group select,
+      [data-theme="dark"] .form-group textarea {
+        color: #fff;
+      }
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        border-color: var(--teal);
+      }
+      .fee-display {
+        background: var(--bg);
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--navy);
+      }
+      .modal-footer {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+        margin-top: 24px;
+      }
+      .btn-cancel {
+        padding: 10px 20px;
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        background: transparent;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        cursor: pointer;
+        color: var(--slate);
+      }
+      .btn-primary {
+        background: var(--teal);
+        color: #fff;
+        border: none;
+        border-radius: 9px;
+        padding: 10px 20px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      @keyframes slideUp {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+    
+</style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/pages/patient-appointments/main.jsx"></script>
+  </body>
+</html>
