@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <style>#root { display: contents; }</style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CareSync HMS — My Schedule</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/legacy/css/dashboard-style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+    <style>
+
+      .material-symbols-outlined {
+        vertical-align: middle;
+        line-height: 1;
+      }
+      .nav-icon {
+        font-size: 18px !important;
+        width: 20px;
+        text-align: center;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .schedule-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 16px;
+        margin-bottom: 28px;
+      }
+      .sstat {
+        background: var(--white);
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        padding: 18px 20px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .sstat-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+      }
+      .sstat-num {
+        font-family: "Sora", sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--navy);
+      }
+      .sstat-label {
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .tabs {
+        display: flex;
+        gap: 0;
+        margin-bottom: 24px;
+        border-bottom: 2px solid var(--border);
+      }
+      .tab-btn {
+        padding: 12px 24px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--muted);
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -2px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .tab-btn:hover {
+        color: var(--navy);
+      }
+      .tab-btn.active {
+        color: var(--teal);
+        border-bottom-color: var(--teal);
+      }
+      .tab-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 20px;
+        height: 20px;
+        padding: 0 6px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: 700;
+        margin-left: 6px;
+      }
+      .tab-btn.active .tab-count {
+        background: var(--teal);
+        color: white;
+      }
+      .tab-btn:not(.active) .tab-count {
+        background: var(--border);
+        color: var(--muted);
+      }
+
+      .schedule-table-wrap {
+        background: var(--white);
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        overflow: hidden;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th {
+        padding: 13px 20px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--muted);
+        text-align: left;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+      }
+      td {
+        padding: 16px 20px;
+        font-size: 14px;
+        color: var(--slate);
+        border-bottom: 1px solid var(--border);
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+      tr:hover td {
+        background: rgba(10, 124, 124, 0.02);
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .badge.confirmed {
+        background: rgba(26, 171, 109, 0.1);
+        color: var(--success);
+      }
+      .badge.pending {
+        background: rgba(245, 166, 35, 0.1);
+        color: var(--warning);
+      }
+      .badge.cancelled {
+        background: rgba(224, 82, 82, 0.1);
+        color: var(--danger);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--muted);
+      }
+      .empty-state-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+      }
+      .empty-state-title {
+        font-family: "Sora", sans-serif;
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--navy);
+        margin-bottom: 8px;
+      }
+      .empty-state-desc {
+        font-size: 14px;
+      }
+    
+</style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/pages/doctor-schedule/main.jsx"></script>
+  </body>
+</html>
