@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <style>#root { display: contents; }</style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CareSync HMS — Billing & Invoices</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/legacy/css/dashboard-style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+    <style>
+
+      .material-symbols-outlined {
+        vertical-align: middle;
+        line-height: 1;
+      }
+      .nav-icon {
+        font-size: 18px !important;
+        width: 20px;
+        text-align: center;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .billing-summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+        margin-bottom: 28px;
+      }
+      .billing-card {
+        background: var(--white);
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        padding: 22px 24px;
+        position: relative;
+        overflow: hidden;
+      }
+      .billing-card::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+      }
+      .billing-card.total::after {
+        background: var(--teal);
+      }
+      .billing-card.paid::after {
+        background: var(--success);
+      }
+      .billing-card.due::after {
+        background: var(--danger);
+      }
+      .billing-card.partial::after {
+        background: var(--warning);
+      }
+      .billing-card-icon {
+        font-size: 28px;
+        margin-bottom: 10px;
+      }
+      .billing-card-amount {
+        font-family: "Sora", sans-serif;
+        font-size: 26px;
+        font-weight: 700;
+        color: var(--navy);
+      }
+      .billing-card-label {
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-top: 4px;
+      }
+
+      .invoice-table-wrap {
+        background: var(--white);
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        overflow: hidden;
+      }
+      .invoice-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--border);
+      }
+      .invoice-title {
+        font-family: "Sora", sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--navy);
+      }
+      .filter-pills {
+        display: flex;
+        gap: 8px;
+      }
+      .filter-pill {
+        padding: 6px 14px;
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        background: none;
+        font-family: "DM Sans", sans-serif;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--muted);
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .filter-pill:hover {
+        border-color: var(--teal);
+        color: var(--teal);
+      }
+      .filter-pill.active {
+        background: var(--teal);
+        color: white;
+        border-color: var(--teal);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th {
+        padding: 13px 20px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--muted);
+        text-align: left;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+      }
+      td {
+        padding: 16px 20px;
+        font-size: 14px;
+        color: var(--slate);
+        border-bottom: 1px solid var(--border);
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+      tr:hover td {
+        background: rgba(10, 124, 124, 0.02);
+      }
+      .invoice-code {
+        font-family: "Sora", sans-serif;
+        font-weight: 600;
+        color: var(--navy);
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .badge.paid {
+        background: rgba(26, 171, 109, 0.1);
+        color: var(--success);
+      }
+      .badge.unpaid {
+        background: rgba(224, 82, 82, 0.1);
+        color: var(--danger);
+      }
+      .badge.partial {
+        background: rgba(245, 166, 35, 0.1);
+        color: var(--warning);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--muted);
+      }
+      .empty-state-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+      }
+      .empty-state-title {
+        font-family: "Sora", sans-serif;
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--navy);
+        margin-bottom: 8px;
+      }
+
+      .loading-skeleton {
+        background: linear-gradient(
+          90deg,
+          var(--border) 25%,
+          var(--bg) 50%,
+          var(--border) 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        border-radius: 8px;
+        height: 56px;
+        margin-bottom: 2px;
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+    
+</style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/pages/patient-billing/main.jsx"></script>
+  </body>
+</html>
